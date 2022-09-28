@@ -32,7 +32,7 @@ public class Movement : MonoBehaviour
 
     private void DoJump(InputAction.CallbackContext context){
         if (grounded){
-            velocity = 20;
+            velocity = 10;
         }
     }
 
@@ -54,9 +54,9 @@ public class Movement : MonoBehaviour
         transform.Translate(new Vector2(0, velocity) * Time.deltaTime);
 
         //Ground
-        Vector2 offset = new Vector2(transform.position.x, transform.position.y + -0.8f);
-        RaycastHit2D hit = Physics2D.Raycast(offset, transform.TransformDirection(Vector2.down), 0.5f);
-        Debug.DrawRay(offset, transform.TransformDirection(Vector2.down) * 0.5f, Color.red);
+        Vector2 offset = new Vector2(transform.position.x, transform.position.y + -1f);
+        RaycastHit2D hit = Physics2D.Raycast(offset, transform.TransformDirection(Vector2.down), 0.1f);
+        Debug.DrawRay(offset, transform.TransformDirection(Vector2.down) * 0.1f, Color.red);
         if (hit){
             surfacePoint = new Vector2(transform.position.x, hit.collider.ClosestPoint(transform.position).y + (transform.localScale.y/2));
             grounded = true;
@@ -64,5 +64,7 @@ public class Movement : MonoBehaviour
             grounded = false;
         }
         
+        //TODO ADD SIDE COLLIDERS
+
     }
 }
