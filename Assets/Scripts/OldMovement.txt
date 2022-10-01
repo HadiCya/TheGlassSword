@@ -1,0 +1,71 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.InputSystem;
+
+public class Movement : MonoBehaviour
+{
+    private PlayerControls playerControls;
+    private Vector2 moveDirection;
+    private bool grounded;
+    Vector2 surfacePoint;
+    private float velocity, surface;
+    public float moveSpeed, gravity, gravityScale;
+    
+
+    private void Awake(){
+        playerControls = new PlayerControls();
+    }
+
+    private void OnEnable(){
+        playerControls.Enable();
+    }
+
+    private void OnDisable(){
+        playerControls.Disable();
+        playerControls.Player.Jump.performed -= DoJump;
+    }
+
+    void Start(){
+        playerControls.Player.Jump.performed += DoJump;
+    }
+
+    private void DoJump(InputAction.CallbackContext context){
+        if (grounded){
+            velocity = 10;
+        }
+    }
+
+    private void Update(){
+        // Character movement based on Vector gathered by Unity input
+        moveDirection = playerControls.Player.Move.ReadValue<Vector2>();
+        moveDirection.Set(moveDirection.x, 0);
+        transform.Translate(moveDirection * (Time.deltaTime * moveSpeed));
+
+        //GRAVITY
+        velocity += (gravity * gravityScale) * Time.deltaTime;
+        if (grounded && velocity <= 0)
+        {
+            velocity = 0;
+            transform.position = new Vector2(transform.position.x, surfacePoint.y);
+        }
+        transform.Translate(new Vector2(0, velocity) * Time.deltaTime);
+
+        //Ground
+        Vector2 offset = new Vector2(transform.position.x, transform.position.y + -1f);
+        RaycastHit2D hit = Physics2D.Raycast(offset, transform.TransformDirection(Vector2.down), 0.05f);
+        Debug.DrawRay(offset, transform.TransformDirection(Vector2.down) * 0.05f, Color.red);
+        if (hit){
+            surfacePoint = new Vector2(transform.position.x, hit.collider.ClosestPoint(transform.position).y + (transform.localScale.y/2));
+            Debug.Log("TRUE");
+            grounded = true;
+        
+        } else {
+            Debug.Log("FALSE");
+            grounded = false;
+        }
+        
+        //TODO ADD SIDE COLLIDERS
+
+    }
+}

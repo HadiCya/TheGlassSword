@@ -7,10 +7,14 @@ public class Movement : MonoBehaviour
 {
     private PlayerControls playerControls;
     private Vector2 moveDirection;
+    public float moveSpeed = 8f;
+    public float jump = 6f;
+    private float timer;
     private bool grounded;
-    Vector2 surfacePoint;
-    private float velocity, surface;
-    public float moveSpeed, gravity, gravityScale;
+    public bool isFacingRight = true;
+    [SerializeField] private Rigidbody2D rb;
+    [SerializeField] private Transform groundCheck;
+    [SerializeField] private LayerMask groundLayer;
     
 
     private void Awake(){
@@ -31,40 +35,38 @@ public class Movement : MonoBehaviour
     }
 
     private void DoJump(InputAction.CallbackContext context){
-        if (grounded){
-            velocity = 10;
+        if(grounded || timer < 0.1f){
+            timer = 1f;
+            rb.velocity = new Vector2(rb.velocity.x, jump);
         }
     }
 
     private void Update(){
-        // Character movement based on Vector gathered by Unity input
         moveDirection = playerControls.Player.Move.ReadValue<Vector2>();
-        moveDirection.Set(moveDirection.x, 0);
-        transform.Translate(moveDirection * (Time.deltaTime * moveSpeed));
-
-        //GRAVITY
-        velocity += (gravity * gravityScale) * Time.deltaTime;
-        if (grounded && velocity <= 0)
-        {
-            velocity = 0;
-            transform.position = new Vector2(transform.position.x, surfacePoint.y);
-        } else {
-            grounded = false;
-        }
-        transform.Translate(new Vector2(0, velocity) * Time.deltaTime);
-
-        //Ground
-        Vector2 offset = new Vector2(transform.position.x, transform.position.y + -1f);
-        RaycastHit2D hit = Physics2D.Raycast(offset, transform.TransformDirection(Vector2.down), 0.1f);
-        Debug.DrawRay(offset, transform.TransformDirection(Vector2.down) * 0.1f, Color.red);
-        if (hit){
-            surfacePoint = new Vector2(transform.position.x, hit.collider.ClosestPoint(transform.position).y + (transform.localScale.y/2));
+        if(isGrounded()){
             grounded = true;
+            timer = 0f;
         } else {
             grounded = false;
         }
-        
-        //TODO ADD SIDE COLLIDERS
+        timer += Time.deltaTime;
+        Flip();
+    }
 
+    private void FixedUpdate(){
+        rb.velocity = new Vector2(moveDirection.x * moveSpeed, rb.velocity.y);
+    }
+
+    private bool isGrounded(){
+        return Physics2D.OverlapCircle(groundCheck.position, 0.2f, groundLayer);
+    }
+
+    private void Flip(){
+        if (isFacingRight && moveDirection.x < 0f || !isFacingRight && moveDirection.x > 0f){
+            isFacingRight = !isFacingRight;
+            Vector3 localScale = transform.localScale;
+            localScale.x *= -1f;
+            transform.localScale = localScale;
+        }
     }
 }

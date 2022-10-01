@@ -1,22 +1,25 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Weapons : MonoBehaviour
 {
     private PlayerControls playerControls;
     private Vector2 direction;
     public GameObject bullet;
+    public Transform shootingPosition;
+    private bool isFacingRight;
     private string action = "";
+    public GameObject txt;
+    private int option;
 
     private void Awake(){
         playerControls = new PlayerControls();
     }
-
     private void OnEnable(){
         playerControls.Enable();
     }
-
     private void OnDisable(){
         playerControls.Disable();
     }
@@ -24,40 +27,52 @@ public class Weapons : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        isFacingRight = GetComponent<Movement>().isFacingRight;
         direction = playerControls.Player.Choice.ReadValue<Vector2>();
-        direction.Set(direction.x, direction.y);
-        Vector2 v2 = new Vector2(0,1);
-        if (action == ""){
-        if (direction == Vector2.up){
-            action = "sword";
-        } else if (direction == Vector2.right){
+        float dirX = direction.x;
+        float dirY = direction.y;
+        //Debug.Log(direction);
+        if ((dirX > -0.3f && dirX < 0.3f) && (dirY > 0.7f && dirY < 1f) && option != 1){
+            txt.GetComponent<TMPro.TextMeshProUGUI>().text = "BULLET";
             action = "bullet";
-        } else if (direction == Vector2.down){
+        } else if ((dirX > 0.7f && dirX < 1f) && (dirY > -0.3f && dirY < 0.3f) && option != 2){
+            txt.GetComponent<TMPro.TextMeshProUGUI>().text = "SWORD";
+            action = "sword";
+        } else if ((dirX > -0.3f && dirX < 0.3f) && (dirY > -1f && dirY < -0.7f) && option != 3){
+            txt.GetComponent<TMPro.TextMeshProUGUI>().text = "SHIELD";
             action = "shield";
-        } else if (direction == Vector2.left){
+        } else if ((dirX > -1f && dirX < -0.7f) && (dirY > -0.3f && dirY < 0.3f) && option != 4){
+            txt.GetComponent<TMPro.TextMeshProUGUI>().text = "BRIDGE";
             action = "bridge";
-        }
         }
 
         bool temp = playerControls.Player.Fire.IsPressed();
         if (temp){
             switch (action){
                 case "bullet":
-                    Instantiate(bullet, transform.position, transform.rotation);
-                    Debug.Log("BULLET");
+                    GameObject bulletInstance = Instantiate(bullet, shootingPosition.position, transform.rotation);
+                    if(isFacingRight){
+                        bulletInstance.GetComponent<Rigidbody2D>().velocity = transform.right * 5f;
+                    } else {
+                        bulletInstance.GetComponent<Rigidbody2D>().velocity = transform.right * -5f;
+                    }
                     action = "";
+                    option = 1;
                     break;
                 case "sword":
-                    Debug.Log("SWORD");
+                    
                     action = "";
+                    option = 2;
                     break;
                 case "shield":
-                    Debug.Log("SHIELD");
+                    
                     action = "";
+                    option = 3;
                     break;
                 case "bridge":
-                    Debug.Log("BRIDGE");
+                    
                     action = "";
+                    option = 4;
                     break;
             }
         }
