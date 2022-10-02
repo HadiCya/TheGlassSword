@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 6191374778258729757}
   - component: {fileID: 6191374778258729746}
   - component: {fileID: 6191374778258729747}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Enemy (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -144,7 +144,10 @@ MonoBehaviour:
   _dz: 0
   playerLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!50 &6191374778258729746
 Rigidbody2D:
   serializedVersion: 4

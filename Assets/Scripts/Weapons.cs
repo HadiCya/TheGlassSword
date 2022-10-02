@@ -8,9 +8,12 @@ public class Weapons : MonoBehaviour
     private PlayerControls playerControls;
     private Vector2 direction;
     public GameObject bullet;
-    public Transform shootingPosition;
+    public Transform weaponPosition;
     private bool isFacingRight;
     private string action = "";
+    [SerializeField] private LayerMask enemyLayer;
+    [SerializeField] private LayerMask groundLayer;
+    public float attackRange;
     public GameObject txt;
     private int option;
 
@@ -31,7 +34,6 @@ public class Weapons : MonoBehaviour
         direction = playerControls.Player.Choice.ReadValue<Vector2>();
         float dirX = direction.x;
         float dirY = direction.y;
-        //Debug.Log(direction);
         if ((dirX > -0.3f && dirX < 0.3f) && (dirY > 0.7f && dirY < 1f) && option != 1){
             txt.GetComponent<TMPro.TextMeshProUGUI>().text = "BULLET";
             action = "bullet";
@@ -45,36 +47,60 @@ public class Weapons : MonoBehaviour
             txt.GetComponent<TMPro.TextMeshProUGUI>().text = "BRIDGE";
             action = "bridge";
         }
-
         bool temp = playerControls.Player.Fire.IsPressed();
         if (temp){
             switch (action){
                 case "bullet":
-                    GameObject bulletInstance = Instantiate(bullet, shootingPosition.position, transform.rotation);
-                    if(isFacingRight){
-                        bulletInstance.GetComponent<Rigidbody2D>().velocity = transform.right * 5f;
-                    } else {
-                        bulletInstance.GetComponent<Rigidbody2D>().velocity = transform.right * -5f;
-                    }
-                    action = "";
-                    option = 1;
+                    shootBullet();
                     break;
                 case "sword":
-                    
-                    action = "";
-                    option = 2;
+                    useSword();
                     break;
                 case "shield":
-                    
-                    action = "";
-                    option = 3;
+                    useShield();
                     break;
                 case "bridge":
-                    
-                    action = "";
-                    option = 4;
+                    placeBridge();
                     break;
             }
         }
     }
+    void shootBullet(){
+        GameObject bulletInstance = Instantiate(bullet, weaponPosition.position, transform.rotation);
+        if(isFacingRight){
+            bulletInstance.GetComponent<Rigidbody2D>().velocity = transform.right * 5f;
+        } else {
+            bulletInstance.GetComponent<Rigidbody2D>().velocity = transform.right * -5f;
+        }
+        action = "";
+        option = 1;
+    }
+
+    void useSword(){
+        Collider2D coll = Physics2D.OverlapCircle(weaponPosition.position, attackRange, enemyLayer);
+        RaycastHit2D right = Physics2D.Raycast(transform.position, /*weaponPosition.position*/transform.TransformDirection(Vector2.right), attackRange, groundLayer);
+        if(coll && !right){
+            Destroy(coll.gameObject);
+        }
+        action = "";
+        option = 2;
+    }
+
+    void useShield(){
+        action = "";
+        option = 3;
+    }
+
+    void placeBridge(){
+        action = "";
+        option = 4;
+    }
+
+    private void OnDrawGizmos() {
+     Gizmos.color = Color.red;
+     Gizmos.DrawWireSphere(weaponPosition.position, attackRange);
+     Gizmos.color = Color.blue;
+     Gizmos.DrawLine(transform.position, weaponPosition.position);
+ }
 }
+
