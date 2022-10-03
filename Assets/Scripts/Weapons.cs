@@ -13,6 +13,7 @@ public class Weapons : MonoBehaviour
     public GameObject shield;
     private bool isFacingRight;
     private bool wasFacingRight;
+    private bool first;
     private int maxBlocks;
     private string action = "";
     [SerializeField] private LayerMask enemyLayer;
@@ -121,7 +122,10 @@ public class Weapons : MonoBehaviour
             oldTile = (Tile)floor.GetTile(currentCell);
             if (oldTile == null && gameObject.GetComponent<Movement>().grounded){
             floor.SetTile(currentCell, bridge);
-        } else {
+        } else if (i == 0){
+            first = true;
+        }
+        else {
             oldTile = null;
             maxBlocks = i;
             break;
@@ -133,9 +137,15 @@ public class Weapons : MonoBehaviour
 
     void resetTiles(){
         for(int i = 0; i < maxBlocks; i++){
-            currentCell.x -= wasFacingRight ? 1 : -1;
-            floor.SetTile(currentCell, oldTile);
+            if(first && i == maxBlocks-1){  
+                first = false; 
+            } else {
+                currentCell.x -= wasFacingRight ? 1 : -1;
+                floor.SetTile(currentCell, oldTile);
+           }
+            
         }
+        maxBlocks = 0;
         
     }
 
