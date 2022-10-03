@@ -12,6 +12,8 @@ public class Weapons : MonoBehaviour
     public Transform weaponPosition;
     public GameObject shield;
     private bool isFacingRight;
+    private bool wasFacingRight;
+    private int maxBlocks;
     private string action = "";
     [SerializeField] private LayerMask enemyLayer;
     [SerializeField] private LayerMask groundLayer;
@@ -79,7 +81,7 @@ public class Weapons : MonoBehaviour
     }
     void shootBullet(){
         shield.SetActive(false);
-        floor.SetTile(currentCell, oldTile);
+        resetTiles();
         GameObject bulletInstance = Instantiate(bullet, weaponPosition.position, transform.rotation);
         if(isFacingRight){
             bulletInstance.GetComponent<Rigidbody2D>().velocity = transform.right * 20f;
@@ -92,7 +94,7 @@ public class Weapons : MonoBehaviour
 
     void useSword(){
         shield.SetActive(false);
-        floor.SetTile(currentCell, oldTile);
+        resetTiles();
         Collider2D coll = Physics2D.OverlapCircle(weaponPosition.position, attackRange, enemyLayer);
         RaycastHit2D right = Physics2D.Raycast(transform.position, transform.TransformDirection(Vector2.right), attackRange, groundLayer);
         if(coll && !right){
@@ -104,7 +106,7 @@ public class Weapons : MonoBehaviour
 
     void useShield(){
         shield.SetActive(true);
-        floor.SetTile(currentCell, oldTile);
+        resetTiles();
         action = "";
         option = 3;
     }
@@ -113,13 +115,28 @@ public class Weapons : MonoBehaviour
         shield.SetActive(false);
         currentCell = floor.WorldToCell(transform.position);
         currentCell.y -= 2;
-        currentCell.x += isFacingRight ? 1 : -1;
-        oldTile = (Tile)floor.GetTile(currentCell);
-        if (floor.GetTile(currentCell) == null){
+        for(int i = 0; i < 5; i++){
+            currentCell.x += isFacingRight ? 1 : -1;
+            wasFacingRight = isFacingRight;
+            oldTile = (Tile)floor.GetTile(currentCell);
+            if (oldTile == null && gameObject.GetComponent<Movement>().grounded){
             floor.SetTile(currentCell, bridge);
+        } else {
+            oldTile = null;
+            maxBlocks = i;
+            break;
+        }
         }
         action = "";
         option = 4;
+    }
+
+    void resetTiles(){
+        for(int i = 0; i < maxBlocks; i++){
+            currentCell.x -= wasFacingRight ? 1 : -1;
+            floor.SetTile(currentCell, oldTile);
+        }
+        
     }
 
     private void OnDrawGizmos() {

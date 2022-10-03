@@ -10,7 +10,7 @@ public class Movement : MonoBehaviour
     public float moveSpeed = 8f;
     public float jump = 6f;
     private float timer;
-    private bool grounded;
+    public bool grounded;
     public bool isFacingRight = true;
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private Transform groundCheck;
