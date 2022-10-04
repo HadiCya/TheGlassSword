@@ -27,7 +27,6 @@ public class Walker_Movement : Walker_AI
     {
         rb2d.velocity = new Vector2(1 * _moveSpeed, rb2d.velocity.y);
 
-        //NEEDS BETTER SOLUTION (bad)
         bottom = Physics2D.Raycast(transform.position, transform.TransformDirection(Vector2.down), 0.6f, groundLayer);
         Debug.DrawRay(transform.position, transform.TransformDirection(Vector2.right) * 0.6f, Color.red);
         Debug.DrawRay(transform.position, transform.TransformDirection(Vector2.left) * 0.6f, Color.red);
@@ -43,6 +42,9 @@ public class Walker_Movement : Walker_AI
     void OnTriggerEnter2D(Collider2D coll){
         if (coll.gameObject.layer == LayerMask.NameToLayer("Player")){
             Destroy(coll.gameObject);
+        }
+        if (coll.gameObject.layer == LayerMask.NameToLayer("Shield")){
+            Destroy(gameObject);
         }
         if (coll.gameObject.layer == LayerMask.NameToLayer("Ground") || coll.gameObject.layer == LayerMask.NameToLayer("Enemy") && timer <= 0f){
             _moveSpeed *= -1;
