@@ -11,6 +11,7 @@ public class Weapons : MonoBehaviour
     public GameObject bullet;
     public Transform weaponPosition;
     public GameObject shield;
+    public GameObject sword;
     private bool isFacingRight;
     private bool wasFacingRight;
     private int maxBlocks;
@@ -25,6 +26,7 @@ public class Weapons : MonoBehaviour
     public int option;
     private float timer;
     public bool hit = true;
+    public bool currBullet;
     private Vector3Int currentCell;
     private GameObject bulletInstance;
 
@@ -49,7 +51,8 @@ public class Weapons : MonoBehaviour
         float dirX = direction.x;
         float dirY = direction.y;
         //checkHit(option);
-        if ((dirX > -0.3f && dirX < 0.3f) && (dirY > 0.7f && dirY <= 1f) && option != 1){
+
+        if (!currBullet && (dirX > -0.3f && dirX < 0.3f) && (dirY > 0.7f && dirY <= 1f) && option != 1){
             action = "SHARD";
         } else if ((dirX > 0.7f && dirX <= 1f) && (dirY > -0.3f && dirY < 0.3f) && option != 2){
             action = "SWORD";
@@ -57,6 +60,8 @@ public class Weapons : MonoBehaviour
             action = "SHIELD";
         } else if ((dirX >= -1f && dirX < -0.7f) && (dirY > -0.3f && dirY < 0.3f) && option != 4){
             action = "SCAFFOLD";
+        } else if (playerControls.Player.Break.IsPressed()){
+            action = "BREAK";
         }
         txt.GetComponent<TMPro.TextMeshProUGUI>().text = action;
         //If the fire button is pressed, do one of the mechanics selected.
@@ -82,10 +87,16 @@ public class Weapons : MonoBehaviour
                     break;
             }
         }
+        if (action == "BREAK"){
+            clearTools();
+            timer = 0.5f;
+        }
         timer -= Time.deltaTime;
     }
     void shootBullet(){
-        Destroy(bulletInstance);
+        DestroyImmediate(bulletInstance);
+        currBullet = true;
+        bulletInstance = null;
         resetShield();
         resetTiles();
         bulletInstance = Instantiate(bullet, weaponPosition.position, transform.rotation);
@@ -96,12 +107,14 @@ public class Weapons : MonoBehaviour
     void useSword(){
         resetShield();
         resetTiles();
-        Collider2D coll = Physics2D.OverlapCircle(weaponPosition.position, attackRange, enemyLayer);
-        RaycastHit2D right = Physics2D.Raycast(transform.position, transform.TransformDirection(Vector2.right), attackRange, groundLayer);
-        if(coll && !right){
-            Destroy(coll.gameObject);
-            hit = true;
-            option = 2;
+        Collider2D[] enemyCheck = Physics2D.OverlapCircleAll(weaponPosition.position, attackRange, enemyLayer);
+        RaycastHit2D groundCheck = Physics2D.Raycast(transform.position, transform.TransformDirection(Vector2.right), attackRange, groundLayer);
+        foreach(Collider2D enemy in enemyCheck){
+            if (!groundCheck){
+                Destroy(enemy.gameObject);
+                hit = true;
+                option = 2;
+            }
         }
         action = "";
     }
@@ -116,6 +129,11 @@ public class Weapons : MonoBehaviour
         resetShield();
         currentCell = floor.WorldToCell(transform.position);
         currentCell.y -= 2;
+        if (floor.GetTile(currentCell) == null && gameObject.GetComponent<Movement>().grounded){
+            bridgeFloor.SetTile(currentCell, bridge);
+            hit = true;
+            option = 4;
+        }
         for(int i = 0; i < 5; i++){
             currentCell.x += isFacingRight ? 1 : -1;
             wasFacingRight = isFacingRight;
@@ -133,6 +151,12 @@ public class Weapons : MonoBehaviour
         action = "";
     }
 
+    void clearTools(){
+        resetShield();
+        resetTiles();
+        DestroyImmediate(bulletInstance);
+        action = "";
+    }
     void resetTiles(){
         bridgeFloor.ClearAllTiles();
     }
@@ -140,14 +164,6 @@ public class Weapons : MonoBehaviour
     void resetShield(){
         shield.SetActive(false);
     }
-
-    // void checkHit(int op){
-    //     if(!hit){
-    //         option = 0;
-    //     } else {
-    //         option = op;
-    //     }
-    // }
 
     private void OnDrawGizmos() {
      Gizmos.color = Color.red;

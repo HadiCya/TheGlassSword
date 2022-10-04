@@ -39,7 +39,7 @@ public class Walker_Movement : Walker_AI
         Debug.DrawRay(transform.position, transform.TransformDirection(Vector2.down) * 0.6f, Color.red);
 
         if(right || left){ //Player detection to kill player
-            Debug.Log("KILL PLAYER");    
+            Destroy(right ? right.collider.gameObject : left.collider.gameObject);
         }
         if((rightWall || leftWall || rightEnemy || leftEnemy) && timer <= 0f){
             _moveSpeed *= -1;
