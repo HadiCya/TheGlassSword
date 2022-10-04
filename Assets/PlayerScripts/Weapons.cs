@@ -13,20 +13,22 @@ public class Weapons : MonoBehaviour
     public GameObject shield;
     private bool isFacingRight;
     private bool wasFacingRight;
-    private bool first;
     private int maxBlocks;
     private string action = "";
     [SerializeField] private LayerMask enemyLayer;
     [SerializeField] private LayerMask groundLayer;
     public Tile bridge;
     public Tilemap floor;
+    public Tilemap bridgeFloor;
     public float attackRange;
     public GameObject txt;
-    private int option;
+    public int option;
     private float timer;
-    private Tile oldTile;
+    public bool hit = true;
     private Vector3Int currentCell;
+    private GameObject bulletInstance;
 
+    //Sets up player controls with input system
     private void Awake(){
         playerControls = new PlayerControls();
     }
@@ -40,39 +42,41 @@ public class Weapons : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //Checks to see if player is facing right
         isFacingRight = GetComponent<Movement>().isFacingRight;
+        //Get direction of right joystick/keyboard input to choose what is selected
         direction = playerControls.Player.Choice.ReadValue<Vector2>();
         float dirX = direction.x;
         float dirY = direction.y;
+        //checkHit(option);
         if ((dirX > -0.3f && dirX < 0.3f) && (dirY > 0.7f && dirY <= 1f) && option != 1){
-            txt.GetComponent<TMPro.TextMeshProUGUI>().text = "BULLET";
-            action = "bullet";
+            action = "SHARD";
         } else if ((dirX > 0.7f && dirX <= 1f) && (dirY > -0.3f && dirY < 0.3f) && option != 2){
-            txt.GetComponent<TMPro.TextMeshProUGUI>().text = "SWORD";
-            action = "sword";
+            action = "SWORD";
         } else if ((dirX > -0.3f && dirX < 0.3f) && (dirY >= -1f && dirY < -0.7f) && option != 3){
-            txt.GetComponent<TMPro.TextMeshProUGUI>().text = "SHIELD";
-            action = "shield";
+            action = "SHIELD";
         } else if ((dirX >= -1f && dirX < -0.7f) && (dirY > -0.3f && dirY < 0.3f) && option != 4){
-            txt.GetComponent<TMPro.TextMeshProUGUI>().text = "BRIDGE";
-            action = "bridge";
+            action = "SCAFFOLD";
         }
+        txt.GetComponent<TMPro.TextMeshProUGUI>().text = action;
+        //If the fire button is pressed, do one of the mechanics selected.
         bool temp = playerControls.Player.Fire.IsPressed();
         if (temp && timer <= 0){
+            hit = false;
             switch (action){
-                case "bullet":
+                case "SHARD":
                     shootBullet();
                     timer = 0.5f;
                     break;
-                case "sword":
+                case "SWORD":
                     useSword();
                     timer = 0.5f;
                     break;
-                case "shield":
+                case "SHIELD":
                     useShield();
                     timer = 0.5f;
                     break;
-                case "bridge":
+                case "SCAFFOLD":
                     placeBridge();
                     timer = 0.5f;
                     break;
@@ -81,73 +85,69 @@ public class Weapons : MonoBehaviour
         timer -= Time.deltaTime;
     }
     void shootBullet(){
-        shield.SetActive(false);
+        Destroy(bulletInstance);
+        resetShield();
         resetTiles();
-        GameObject bulletInstance = Instantiate(bullet, weaponPosition.position, transform.rotation);
-        if(isFacingRight){
-            bulletInstance.GetComponent<Rigidbody2D>().velocity = transform.right * 20f;
-        } else {
-            bulletInstance.GetComponent<Rigidbody2D>().velocity = transform.right * -20f;
-        }
+        bulletInstance = Instantiate(bullet, weaponPosition.position, transform.rotation);
+        bulletInstance.GetComponent<Rigidbody2D>().velocity = isFacingRight ? Vector3.right * 20f : Vector3.right * -20f;
         action = "";
-        option = 1;
     }
 
     void useSword(){
-        shield.SetActive(false);
+        resetShield();
         resetTiles();
         Collider2D coll = Physics2D.OverlapCircle(weaponPosition.position, attackRange, enemyLayer);
         RaycastHit2D right = Physics2D.Raycast(transform.position, transform.TransformDirection(Vector2.right), attackRange, groundLayer);
         if(coll && !right){
             Destroy(coll.gameObject);
+            hit = true;
+            option = 2;
         }
         action = "";
-        option = 2;
     }
 
     void useShield(){
-        shield.SetActive(true);
         resetTiles();
+        shield.SetActive(true);
         action = "";
-        option = 3;
     }
 
     void placeBridge(){
-        shield.SetActive(false);
+        resetShield();
         currentCell = floor.WorldToCell(transform.position);
         currentCell.y -= 2;
         for(int i = 0; i < 5; i++){
             currentCell.x += isFacingRight ? 1 : -1;
             wasFacingRight = isFacingRight;
-            oldTile = (Tile)floor.GetTile(currentCell);
-            if (oldTile == null && gameObject.GetComponent<Movement>().grounded){
-            floor.SetTile(currentCell, bridge);
+        if (floor.GetTile(currentCell) == null && gameObject.GetComponent<Movement>().grounded){
+            bridgeFloor.SetTile(currentCell, bridge);
+            hit = true;
+            option = 4;
         } else if (i == 0){
-            first = true;
         }
         else {
-            oldTile = null;
             maxBlocks = i;
             break;
         }
         }
         action = "";
-        option = 4;
     }
 
     void resetTiles(){
-        for(int i = 0; i < maxBlocks; i++){
-            if(first && i == maxBlocks-1){  
-                first = false; 
-            } else {
-                currentCell.x -= wasFacingRight ? 1 : -1;
-                floor.SetTile(currentCell, oldTile);
-           }
-            
-        }
-        maxBlocks = 0;
-        
+        bridgeFloor.ClearAllTiles();
     }
+
+    void resetShield(){
+        shield.SetActive(false);
+    }
+
+    // void checkHit(int op){
+    //     if(!hit){
+    //         option = 0;
+    //     } else {
+    //         option = op;
+    //     }
+    // }
 
     private void OnDrawGizmos() {
      Gizmos.color = Color.red;
@@ -156,4 +156,3 @@ public class Weapons : MonoBehaviour
      Gizmos.DrawLine(transform.position, weaponPosition.position);
  }
 }
-

@@ -148,6 +148,9 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
+  enemyLayer:
+    serializedVersion: 2
+    m_Bits: 256
 --- !u!50 &6191374778258729746
 Rigidbody2D:
   serializedVersion: 4
