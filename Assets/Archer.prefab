@@ -150,4 +150,5 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   bullet: {fileID: 4809196059088605434, guid: 704648805edf44dbd95c58efc4a3bf6f, type: 3}
-  shootSpeed: 1
+  shootSpeed: 3
+  range: 30

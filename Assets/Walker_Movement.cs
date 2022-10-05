@@ -44,6 +44,11 @@ public class Walker_Movement : Walker_AI
             Destroy(coll.gameObject);
         }
         if (coll.gameObject.layer == LayerMask.NameToLayer("Shield")){
+            GameObject player = GameObject.FindGameObjectWithTag("Player");
+            player.GetComponent<Weapons>().hit = true;
+            player.GetComponent<Weapons>().currShield = false;
+            player.GetComponent<Weapons>().option = 3;
+            coll.gameObject.SetActive(false);
             Destroy(gameObject);
         }
         if (coll.gameObject.layer == LayerMask.NameToLayer("Ground") || coll.gameObject.layer == LayerMask.NameToLayer("Enemy") && timer <= 0f){

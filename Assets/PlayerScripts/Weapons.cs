@@ -25,8 +25,10 @@ public class Weapons : MonoBehaviour
     public GameObject txt;
     public int option;
     private float timer;
+    public bool didBridge;
     public bool hit = true;
     public bool currBullet;
+    public bool currShield;
     private Vector3Int currentCell;
     private GameObject bulletInstance;
 
@@ -56,9 +58,9 @@ public class Weapons : MonoBehaviour
             action = "SHARD";
         } else if ((dirX > 0.7f && dirX <= 1f) && (dirY > -0.3f && dirY < 0.3f) && option != 2){
             action = "SWORD";
-        } else if ((dirX > -0.3f && dirX < 0.3f) && (dirY >= -1f && dirY < -0.7f) && option != 3){
+        } else if (!currShield && (dirX > -0.3f && dirX < 0.3f) && (dirY >= -1f && dirY < -0.7f) && option != 3){
             action = "SHIELD";
-        } else if ((dirX >= -1f && dirX < -0.7f) && (dirY > -0.3f && dirY < 0.3f) && option != 4){
+        } else if ((dirX >= -1f && dirX < -0.7f) && (dirY > -0.3f && dirY < 0.3f) && !didBridge){
             action = "SCAFFOLD";
         } else if (playerControls.Player.Break.IsPressed()){
             action = "BREAK";
@@ -71,19 +73,19 @@ public class Weapons : MonoBehaviour
             switch (action){
                 case "SHARD":
                     shootBullet();
-                    timer = 0.5f;
+                    timer = 0.2f;
                     break;
                 case "SWORD":
                     useSword();
-                    timer = 0.5f;
+                    timer = 0.2f;
                     break;
                 case "SHIELD":
                     useShield();
-                    timer = 0.5f;
+                    timer = 0.2f;
                     break;
                 case "SCAFFOLD":
                     placeBridge();
-                    timer = 0.5f;
+                    timer = 0.2f;
                     break;
             }
         }
@@ -113,14 +115,16 @@ public class Weapons : MonoBehaviour
             if (!groundCheck){
                 Destroy(enemy.gameObject);
                 hit = true;
+                didBridge = false;
                 option = 2;
+                action = "";
             }
         }
-        action = "";
     }
 
     void useShield(){
         resetTiles();
+        currShield = true;
         shield.SetActive(true);
         action = "";
     }
@@ -140,7 +144,7 @@ public class Weapons : MonoBehaviour
         if (floor.GetTile(currentCell) == null && gameObject.GetComponent<Movement>().grounded){
             bridgeFloor.SetTile(currentCell, bridge);
             hit = true;
-            option = 4;
+            didBridge = true;
         } else if (i == 0){
         }
         else {
@@ -162,6 +166,7 @@ public class Weapons : MonoBehaviour
     }
 
     void resetShield(){
+        currShield = false;
         shield.SetActive(false);
     }
 
