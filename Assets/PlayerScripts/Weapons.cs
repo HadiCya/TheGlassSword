@@ -53,17 +53,13 @@ public class Weapons : MonoBehaviour
         float dirX = direction.x;
         float dirY = direction.y;
         //checkHit(option);
-
-        if (!currBullet && (dirX > -0.3f && dirX < 0.3f) && (dirY > 0.7f && dirY <= 1f) && option != 1){
+        Debug.Log(direction);
+        if (!currBullet && (dirX > -0.75f && dirX < 0f) && (dirY > -0.56f && dirY < 1f) && option != 1){
             action = "SHARD";
-        } else if ((dirX > 0.7f && dirX <= 1f) && (dirY > -0.3f && dirY < 0.3f) && option != 2){
+        } else if ((dirX > 0f && dirX < 0.75f) && (dirY > -0.56f && dirY < 1f) && option != 2){
             action = "SWORD";
-        } else if (!currShield && (dirX > -0.3f && dirX < 0.3f) && (dirY >= -1f && dirY < -0.7f) && option != 3){
+        } else if (!currShield && (dirX > -0.75f && dirX < 0.75f) && (dirY > -1f && dirY < -0.56f) && option != 3){
             action = "SHIELD";
-        } else if ((dirX >= -1f && dirX < -0.7f) && (dirY > -0.3f && dirY < 0.3f) && !didBridge){
-            action = "SCAFFOLD";
-        } else if (playerControls.Player.Break.IsPressed()){
-            action = "BREAK";
         }
         txt.GetComponent<TMPro.TextMeshProUGUI>().text = action;
         //If the fire button is pressed, do one of the mechanics selected.
@@ -83,15 +79,14 @@ public class Weapons : MonoBehaviour
                     useShield();
                     timer = 0.2f;
                     break;
-                case "SCAFFOLD":
-                    placeBridge();
-                    timer = 0.2f;
-                    break;
             }
         }
-        if (action == "BREAK"){
+        if (playerControls.Player.Break.IsPressed() && !didBridge && timer <= -0.2f){
+            placeBridge();
+            timer = 0.2f;
+        } else if (playerControls.Player.Break.IsPressed() && timer <= -0.2f){
             clearTools();
-            timer = 0.5f;
+            timer = 0.2f;
         }
         timer -= Time.deltaTime;
     }
@@ -133,17 +128,19 @@ public class Weapons : MonoBehaviour
         resetShield();
         currentCell = floor.WorldToCell(transform.position);
         currentCell.y -= 2;
+        currentCell.x -= 1;
         if (floor.GetTile(currentCell) == null && gameObject.GetComponent<Movement>().grounded){
             bridgeFloor.SetTile(currentCell, bridge);
-            hit = true;
-            option = 4;
+        }
+        currentCell.x += 1;
+        if (floor.GetTile(currentCell) == null && gameObject.GetComponent<Movement>().grounded){
+            bridgeFloor.SetTile(currentCell, bridge);
         }
         for(int i = 0; i < 5; i++){
             currentCell.x += isFacingRight ? 1 : -1;
             wasFacingRight = isFacingRight;
         if (floor.GetTile(currentCell) == null && gameObject.GetComponent<Movement>().grounded){
             bridgeFloor.SetTile(currentCell, bridge);
-            hit = true;
             didBridge = true;
         } else if (i == 0){
         }
@@ -152,14 +149,11 @@ public class Weapons : MonoBehaviour
             break;
         }
         }
-        action = "";
     }
 
     void clearTools(){
-        resetShield();
         resetTiles();
-        DestroyImmediate(bulletInstance);
-        action = "";
+        didBridge = false;
     }
     void resetTiles(){
         bridgeFloor.ClearAllTiles();

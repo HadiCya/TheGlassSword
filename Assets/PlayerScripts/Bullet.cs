@@ -22,7 +22,7 @@ public class Bullet : MonoBehaviour
     void OnTriggerEnter2D(Collider2D col){
         endBullet();
         player.GetComponent<Weapons>().option = 1;
-        if (col.gameObject.layer == LayerMask.NameToLayer("Enemy") || col.gameObject.layer == LayerMask.NameToLayer("Bullet")){
+        if (col.gameObject.layer == LayerMask.NameToLayer("Enemy")){
             Destroy(col.gameObject);
         }
         Destroy(gameObject);
@@ -30,7 +30,6 @@ public class Bullet : MonoBehaviour
 
     void endBullet(){
         player.GetComponent<Weapons>().hit = true;
-        player.GetComponent<Weapons>().didBridge = false;
         player.GetComponent<Weapons>().currBullet = false;
     }
 }
