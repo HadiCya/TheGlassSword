@@ -34,6 +34,10 @@ public class Shooter : MonoBehaviour
                 timer = shootSpeed;
                 start = false;
             }
-        
     }
+    // void OnTriggerEnter2D(Collider2D coll){
+    //     if (coll.gameObject.layer == LayerMask.NameToLayer("Player")){
+    //         coll.gameObject.SetActive(false);
+    //     }
+    // }
 }

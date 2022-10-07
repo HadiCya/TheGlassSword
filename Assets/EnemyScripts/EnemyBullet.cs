@@ -10,8 +10,8 @@ public class EnemyBullet : MonoBehaviour
     }
     void OnTriggerEnter2D(Collider2D col){
         if (col.gameObject.layer == LayerMask.NameToLayer("Player")){
-            Destroy(col.gameObject);
-            Destroy(gameObject);
+            col.gameObject.SetActive(false);
+            gameObject.SetActive(false);
         }
         // if (col.gameObject.layer == LayerMask.NameToLayer("Shield")){
         //     GameObject player = GameObject.FindGameObjectWithTag("Player");

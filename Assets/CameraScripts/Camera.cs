@@ -11,4 +11,10 @@ public class Camera : MonoBehaviour
     {
         transform.position = new Vector3(transform.position.x + (Time.deltaTime * moveSpeed), transform.position.y, transform.position.z);
     }
+
+    void OnTriggerEnter2D(Collider2D coll){
+        if (coll.gameObject.layer != LayerMask.NameToLayer("Ground")){
+            coll.gameObject.SetActive(false);
+        }
+    }
 }

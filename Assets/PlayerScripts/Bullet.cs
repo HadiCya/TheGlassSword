@@ -7,15 +7,26 @@ public class Bullet : MonoBehaviour
     // Start is called before the first frame update
     private float timer = 3f;
     GameObject player;
+    bool bulletDirection;
 
     void Start(){
         player = GameObject.FindGameObjectWithTag("Player");
+        bulletDirection = player.GetComponent<Movement>().isFacingRight;
     }
     void Update()
     {
+        // RaycastHit2D hitscan = Physics2D.Raycast(transform.position, transform.TransformDirection(bulletDirection ? Vector2.right : Vector2.left), 0.2f, LayerMask.NameToLayer("Enemy"));
+        // Debug.DrawRay(transform.position, bulletDirection ? Vector2.right : Vector2.left, Color.green, 0.2f);
+        // if (hitscan){
+        //     Debug.Log("hit");
+        //     endBullet();
+        //     player.GetComponent<Weapons>().option = 1;
+        //     hitscan.collider.gameObject.SetActive(false);
+        //     gameObject.SetActive(false);
+        // }
         if (timer <= 0){
             endBullet();
-            Destroy(gameObject);
+            gameObject.SetActive(false);
         }
         timer -= Time.deltaTime;
     }
@@ -23,9 +34,10 @@ public class Bullet : MonoBehaviour
         endBullet();
         player.GetComponent<Weapons>().option = 1;
         if (col.gameObject.layer == LayerMask.NameToLayer("Enemy")){
-            Destroy(col.gameObject);
+            col.gameObject.SetActive(false);
         }
-        Destroy(gameObject);
+        gameObject.GetComponent<BoxCollider2D>().enabled = false;
+        gameObject.SetActive(false);
     }
 
     void endBullet(){

@@ -2128,9 +2128,9 @@ TextureImporter:
       generic_platformer_tiles 1_28: -683132814
       generic_platformer_tiles 1_20: 1342663789
       generic_platformer_tiles 1_90: 980664644
-      generic_platformer_tiles 1_30: 898522793
-      generic_platformer_tiles 1_43: -545487758
       generic_platformer_tiles 1_78: -1559088941
+      generic_platformer_tiles 1_12: -688689800
+      generic_platformer_tiles 1_30: 898522793
       generic_platformer_tiles 1_85: -551184486
       generic_platformer_tiles 1_23: -1929395184
       generic_platformer_tiles 1_59: -239694155
@@ -2138,7 +2138,7 @@ TextureImporter:
       generic_platformer_tiles 1_84: -1829810324
       generic_platformer_tiles 1_56: 932214571
       generic_platformer_tiles 1_83: -540485158
-      generic_platformer_tiles 1_12: -688689800
+      generic_platformer_tiles 1_43: -545487758
       generic_platformer_tiles 1_57: -817719858
       generic_platformer_tiles 1_67: -2023743876
       generic_platformer_tiles 1_14: -1473061380

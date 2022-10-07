@@ -64,9 +64,36 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""Break"",
+                    ""name"": ""Scaffold"",
                     ""type"": ""Button"",
                     ""id"": ""7c328943-ec76-4c82-83b1-8a84cd6f4881"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Sword"",
+                    ""type"": ""Button"",
+                    ""id"": ""025fe61d-fd9c-48d3-9193-b851f5ebf4da"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Shard"",
+                    ""type"": ""Button"",
+                    ""id"": ""bc6687ed-ed00-40b9-9704-728053400227"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Shield"",
+                    ""type"": ""Button"",
+                    ""id"": ""0ddbfc1d-0900-4659-bfd2-6a683388034e"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -295,68 +322,13 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 },
                 {
-                    ""name"": ""Keyboard"",
-                    ""id"": ""1e9e924b-65ea-4628-971a-52ca67de49d9"",
-                    ""path"": ""2DVector"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Choice"",
-                    ""isComposite"": true,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""up"",
-                    ""id"": ""fc18e06b-2afc-4e77-a2fa-2767440d3484"",
-                    ""path"": ""<Keyboard>/1"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""Choice"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""right"",
-                    ""id"": ""3ca418dc-5e97-4693-a509-31fcc3a014e4"",
-                    ""path"": ""<Keyboard>/2"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""Choice"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""down"",
-                    ""id"": ""ba8bb8fd-e420-4e96-a399-ac1172f4f871"",
-                    ""path"": ""<Keyboard>/3"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""Choice"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""left"",
-                    ""id"": ""5b56e2f8-d8d6-4ee9-8590-3b056b1e1f56"",
-                    ""path"": ""<Keyboard>/4"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""Choice"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
                     ""name"": """",
                     ""id"": ""a08f008d-f9fd-43bc-9f3d-1e77dfe07dfb"",
-                    ""path"": ""<Keyboard>/enter"",
+                    ""path"": ""<Keyboard>/b"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""Break"",
+                    ""action"": ""Scaffold"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -367,7 +339,40 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
-                    ""action"": ""Break"",
+                    ""action"": ""Scaffold"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0385d90d-4f49-4753-9e28-29281d6a1ebd"",
+                    ""path"": ""<Keyboard>/2"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Sword"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""30f59fd5-3be3-4718-8712-4a7010df4983"",
+                    ""path"": ""<Keyboard>/1"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Shard"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8c13b432-3def-44d9-a0ae-8094c8561081"",
+                    ""path"": ""<Keyboard>/3"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Shield"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -443,7 +448,10 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         m_Player_Fire = m_Player.FindAction("Fire", throwIfNotFound: true);
         m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
         m_Player_Choice = m_Player.FindAction("Choice", throwIfNotFound: true);
-        m_Player_Break = m_Player.FindAction("Break", throwIfNotFound: true);
+        m_Player_Scaffold = m_Player.FindAction("Scaffold", throwIfNotFound: true);
+        m_Player_Sword = m_Player.FindAction("Sword", throwIfNotFound: true);
+        m_Player_Shard = m_Player.FindAction("Shard", throwIfNotFound: true);
+        m_Player_Shield = m_Player.FindAction("Shield", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -507,7 +515,10 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Fire;
     private readonly InputAction m_Player_Jump;
     private readonly InputAction m_Player_Choice;
-    private readonly InputAction m_Player_Break;
+    private readonly InputAction m_Player_Scaffold;
+    private readonly InputAction m_Player_Sword;
+    private readonly InputAction m_Player_Shard;
+    private readonly InputAction m_Player_Shield;
     public struct PlayerActions
     {
         private @PlayerControls m_Wrapper;
@@ -516,7 +527,10 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         public InputAction @Fire => m_Wrapper.m_Player_Fire;
         public InputAction @Jump => m_Wrapper.m_Player_Jump;
         public InputAction @Choice => m_Wrapper.m_Player_Choice;
-        public InputAction @Break => m_Wrapper.m_Player_Break;
+        public InputAction @Scaffold => m_Wrapper.m_Player_Scaffold;
+        public InputAction @Sword => m_Wrapper.m_Player_Sword;
+        public InputAction @Shard => m_Wrapper.m_Player_Shard;
+        public InputAction @Shield => m_Wrapper.m_Player_Shield;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -538,9 +552,18 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @Choice.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnChoice;
                 @Choice.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnChoice;
                 @Choice.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnChoice;
-                @Break.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnBreak;
-                @Break.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnBreak;
-                @Break.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnBreak;
+                @Scaffold.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnScaffold;
+                @Scaffold.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnScaffold;
+                @Scaffold.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnScaffold;
+                @Sword.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSword;
+                @Sword.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSword;
+                @Sword.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSword;
+                @Shard.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnShard;
+                @Shard.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnShard;
+                @Shard.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnShard;
+                @Shield.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnShield;
+                @Shield.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnShield;
+                @Shield.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnShield;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -557,9 +580,18 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @Choice.started += instance.OnChoice;
                 @Choice.performed += instance.OnChoice;
                 @Choice.canceled += instance.OnChoice;
-                @Break.started += instance.OnBreak;
-                @Break.performed += instance.OnBreak;
-                @Break.canceled += instance.OnBreak;
+                @Scaffold.started += instance.OnScaffold;
+                @Scaffold.performed += instance.OnScaffold;
+                @Scaffold.canceled += instance.OnScaffold;
+                @Sword.started += instance.OnSword;
+                @Sword.performed += instance.OnSword;
+                @Sword.canceled += instance.OnSword;
+                @Shard.started += instance.OnShard;
+                @Shard.performed += instance.OnShard;
+                @Shard.canceled += instance.OnShard;
+                @Shield.started += instance.OnShield;
+                @Shield.performed += instance.OnShield;
+                @Shield.canceled += instance.OnShield;
             }
         }
     }
@@ -615,6 +647,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         void OnFire(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
         void OnChoice(InputAction.CallbackContext context);
-        void OnBreak(InputAction.CallbackContext context);
+        void OnScaffold(InputAction.CallbackContext context);
+        void OnSword(InputAction.CallbackContext context);
+        void OnShard(InputAction.CallbackContext context);
+        void OnShield(InputAction.CallbackContext context);
     }
 }

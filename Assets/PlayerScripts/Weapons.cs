@@ -50,15 +50,15 @@ public class Weapons : MonoBehaviour
         isFacingRight = GetComponent<Movement>().isFacingRight;
         //Get direction of right joystick/keyboard input to choose what is selected
         direction = playerControls.Player.Choice.ReadValue<Vector2>();
+
         float dirX = direction.x;
         float dirY = direction.y;
         //checkHit(option);
-        Debug.Log(direction);
-        if (!currBullet && (dirX > -0.75f && dirX < 0f) && (dirY > -0.56f && dirY < 1f) && option != 1){
+        if (!currBullet && (((dirX > -0.75f && dirX < 0f) && (dirY > -0.56f && dirY < 1f)) || playerControls.Player.Shard.IsPressed()) && option != 1){
             action = "SHARD";
-        } else if ((dirX > 0f && dirX < 0.75f) && (dirY > -0.56f && dirY < 1f) && option != 2){
+        } else if ((((dirX > 0f && dirX < 0.75f) && (dirY > -0.56f && dirY < 1f)) || playerControls.Player.Sword.IsPressed()) && option != 2){
             action = "SWORD";
-        } else if (!currShield && (dirX > -0.75f && dirX < 0.75f) && (dirY > -1f && dirY < -0.56f) && option != 3){
+        } else if (!currShield && (((dirX > -0.75f && dirX < 0.75f) && (dirY > -1f && dirY < -0.56f)) || playerControls.Player.Shield.IsPressed()) && option != 3){
             action = "SHIELD";
         }
         txt.GetComponent<TMPro.TextMeshProUGUI>().text = action;
@@ -81,19 +81,19 @@ public class Weapons : MonoBehaviour
                     break;
             }
         }
-        if (playerControls.Player.Break.IsPressed() && !didBridge && timer <= -0.2f){
+        if (playerControls.Player.Scaffold.IsPressed() && !didBridge && timer <= -0.2f){
             placeBridge();
             timer = 0.2f;
-        } else if (playerControls.Player.Break.IsPressed() && timer <= -0.2f){
+        } else if (playerControls.Player.Scaffold.IsPressed() && timer <= -0.2f){
             clearTools();
             timer = 0.2f;
         }
         timer -= Time.deltaTime;
     }
     void shootBullet(){
-        DestroyImmediate(bulletInstance);
+        //DestroyImmediate(bulletInstance);
         currBullet = true;
-        bulletInstance = null;
+        //bulletInstance = null;
         resetShield();
         resetTiles();
         bulletInstance = Instantiate(bullet, weaponPosition.position, transform.rotation);
@@ -108,7 +108,7 @@ public class Weapons : MonoBehaviour
         RaycastHit2D groundCheck = Physics2D.Raycast(transform.position, transform.TransformDirection(Vector2.right), attackRange, groundLayer);
         foreach(Collider2D enemy in enemyCheck){
             if (!groundCheck){
-                Destroy(enemy.gameObject);
+                enemy.gameObject.SetActive(false);
                 hit = true;
                 didBridge = false;
                 option = 2;
