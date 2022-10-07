@@ -9,7 +9,6 @@ public class Weapons : MonoBehaviour
     private PlayerControls playerControls;
     private Vector2 direction;
     public GameObject bullet;
-    public GameObject test;
     public Transform weaponPosition;
     public GameObject shield;
     public GameObject sword;
