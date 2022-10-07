@@ -73,18 +73,18 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Sword"",
+                    ""name"": ""Shard"",
                     ""type"": ""Button"",
-                    ""id"": ""025fe61d-fd9c-48d3-9193-b851f5ebf4da"",
+                    ""id"": ""bc6687ed-ed00-40b9-9704-728053400227"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Shard"",
+                    ""name"": ""Sword"",
                     ""type"": ""Button"",
-                    ""id"": ""bc6687ed-ed00-40b9-9704-728053400227"",
+                    ""id"": ""025fe61d-fd9c-48d3-9193-b851f5ebf4da"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -324,10 +324,10 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""a08f008d-f9fd-43bc-9f3d-1e77dfe07dfb"",
-                    ""path"": ""<Keyboard>/b"",
+                    ""path"": ""<Keyboard>/4"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Keyboard&Mouse"",
+                    ""groups"": """",
                     ""action"": ""Scaffold"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -356,23 +356,23 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""30f59fd5-3be3-4718-8712-4a7010df4983"",
-                    ""path"": ""<Keyboard>/1"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Shard"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""8c13b432-3def-44d9-a0ae-8094c8561081"",
                     ""path"": ""<Keyboard>/3"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Shield"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""30f59fd5-3be3-4718-8712-4a7010df4983"",
+                    ""path"": ""<Keyboard>/1"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Shard"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -449,8 +449,8 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
         m_Player_Choice = m_Player.FindAction("Choice", throwIfNotFound: true);
         m_Player_Scaffold = m_Player.FindAction("Scaffold", throwIfNotFound: true);
-        m_Player_Sword = m_Player.FindAction("Sword", throwIfNotFound: true);
         m_Player_Shard = m_Player.FindAction("Shard", throwIfNotFound: true);
+        m_Player_Sword = m_Player.FindAction("Sword", throwIfNotFound: true);
         m_Player_Shield = m_Player.FindAction("Shield", throwIfNotFound: true);
     }
 
@@ -516,8 +516,8 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Jump;
     private readonly InputAction m_Player_Choice;
     private readonly InputAction m_Player_Scaffold;
-    private readonly InputAction m_Player_Sword;
     private readonly InputAction m_Player_Shard;
+    private readonly InputAction m_Player_Sword;
     private readonly InputAction m_Player_Shield;
     public struct PlayerActions
     {
@@ -528,8 +528,8 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         public InputAction @Jump => m_Wrapper.m_Player_Jump;
         public InputAction @Choice => m_Wrapper.m_Player_Choice;
         public InputAction @Scaffold => m_Wrapper.m_Player_Scaffold;
-        public InputAction @Sword => m_Wrapper.m_Player_Sword;
         public InputAction @Shard => m_Wrapper.m_Player_Shard;
+        public InputAction @Sword => m_Wrapper.m_Player_Sword;
         public InputAction @Shield => m_Wrapper.m_Player_Shield;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
@@ -555,12 +555,12 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @Scaffold.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnScaffold;
                 @Scaffold.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnScaffold;
                 @Scaffold.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnScaffold;
-                @Sword.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSword;
-                @Sword.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSword;
-                @Sword.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSword;
                 @Shard.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnShard;
                 @Shard.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnShard;
                 @Shard.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnShard;
+                @Sword.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSword;
+                @Sword.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSword;
+                @Sword.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSword;
                 @Shield.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnShield;
                 @Shield.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnShield;
                 @Shield.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnShield;
@@ -583,12 +583,12 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @Scaffold.started += instance.OnScaffold;
                 @Scaffold.performed += instance.OnScaffold;
                 @Scaffold.canceled += instance.OnScaffold;
-                @Sword.started += instance.OnSword;
-                @Sword.performed += instance.OnSword;
-                @Sword.canceled += instance.OnSword;
                 @Shard.started += instance.OnShard;
                 @Shard.performed += instance.OnShard;
                 @Shard.canceled += instance.OnShard;
+                @Sword.started += instance.OnSword;
+                @Sword.performed += instance.OnSword;
+                @Sword.canceled += instance.OnSword;
                 @Shield.started += instance.OnShield;
                 @Shield.performed += instance.OnShield;
                 @Shield.canceled += instance.OnShield;
@@ -648,8 +648,8 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         void OnJump(InputAction.CallbackContext context);
         void OnChoice(InputAction.CallbackContext context);
         void OnScaffold(InputAction.CallbackContext context);
-        void OnSword(InputAction.CallbackContext context);
         void OnShard(InputAction.CallbackContext context);
+        void OnSword(InputAction.CallbackContext context);
         void OnShield(InputAction.CallbackContext context);
     }
 }

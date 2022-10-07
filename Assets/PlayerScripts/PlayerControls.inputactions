@@ -51,18 +51,18 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Sword",
+                    "name": "Shard",
                     "type": "Button",
-                    "id": "025fe61d-fd9c-48d3-9193-b851f5ebf4da",
+                    "id": "bc6687ed-ed00-40b9-9704-728053400227",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Shard",
+                    "name": "Sword",
                     "type": "Button",
-                    "id": "bc6687ed-ed00-40b9-9704-728053400227",
+                    "id": "025fe61d-fd9c-48d3-9193-b851f5ebf4da",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -302,10 +302,10 @@
                 {
                     "name": "",
                     "id": "a08f008d-f9fd-43bc-9f3d-1e77dfe07dfb",
-                    "path": "<Keyboard>/b",
+                    "path": "<Keyboard>/4",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Keyboard&Mouse",
+                    "groups": "",
                     "action": "Scaffold",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -334,23 +334,23 @@
                 },
                 {
                     "name": "",
-                    "id": "30f59fd5-3be3-4718-8712-4a7010df4983",
-                    "path": "<Keyboard>/1",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Shard",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "8c13b432-3def-44d9-a0ae-8094c8561081",
                     "path": "<Keyboard>/3",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "Shield",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "30f59fd5-3be3-4718-8712-4a7010df4983",
+                    "path": "<Keyboard>/1",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Shard",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
