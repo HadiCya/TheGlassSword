@@ -15,15 +15,7 @@ public class Bullet : MonoBehaviour
     }
     void Update()
     {
-        // RaycastHit2D hitscan = Physics2D.Raycast(transform.position, transform.TransformDirection(bulletDirection ? Vector2.right : Vector2.left), 0.2f, LayerMask.NameToLayer("Enemy"));
-        // Debug.DrawRay(transform.position, bulletDirection ? Vector2.right : Vector2.left, Color.green, 0.2f);
-        // if (hitscan){
-        //     Debug.Log("hit");
-        //     endBullet();
-        //     player.GetComponent<Weapons>().option = 1;
-        //     hitscan.collider.gameObject.SetActive(false);
-        //     gameObject.SetActive(false);
-        // }
+        gameObject.GetComponent<Rigidbody2D>().velocity = bulletDirection ? Vector3.right * 20f : Vector3.right * -20f;
         if (timer <= 0){
             endBullet();
             gameObject.SetActive(false);
@@ -32,8 +24,8 @@ public class Bullet : MonoBehaviour
     }
     void OnTriggerEnter2D(Collider2D col){
         endBullet();
-        player.GetComponent<Weapons>().option = 1;
         if (col.gameObject.layer == LayerMask.NameToLayer("Enemy")){
+            player.GetComponent<Weapons>().option = 1;
             col.gameObject.SetActive(false);
         }
         gameObject.GetComponent<BoxCollider2D>().enabled = false;

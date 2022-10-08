@@ -12,12 +12,7 @@ public class Shield : MonoBehaviour
         if (contact.layer == LayerMask.NameToLayer("Bullet")){
             contact.SetActive(false);
             Invoke("breakShield", 0.18f);
-        // } else if (contact.tag == "Archer"){
-        //     contact.GetComponent<Rigidbody2D>().AddForce(GetComponentInParent<Movement>().isFacingRight ? new Vector2(5f, 5f) : new Vector2(-5f, 5f), ForceMode2D.Impulse);
-        //     contact.GetComponent<Walker_Movement>().isHitByShield = true;
-        //     breakShield();
-        } 
-            else if (contact.layer == LayerMask.NameToLayer("Enemy")){
+        } else if (contact.layer == LayerMask.NameToLayer("Enemy")){
             contact.GetComponent<Rigidbody2D>().AddForce(GetComponentInParent<Movement>().isFacingRight ? new Vector2(5f, 5f) : new Vector2(-5f, 5f), ForceMode2D.Impulse);
             contact.GetComponent<Walker_Movement>().isHitByShield = true;
             contact.GetComponent<Walker_Movement>().timer = 0.3f;
@@ -26,12 +21,8 @@ public class Shield : MonoBehaviour
         }
     }
 
-    // void bounceBack(){
-    //     contact.GetComponent<Walker_Movement>().isHitByShield = false;
-    // }
     void breakShield(){
         GetComponentInParent<Weapons>().hit = true;
-        GetComponentInParent<Weapons>().didBridge = false;
         GetComponentInParent<Weapons>().currShield = false;
         GetComponentInParent<Weapons>().option = 3;
         gameObject.SetActive(false);

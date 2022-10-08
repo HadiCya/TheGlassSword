@@ -4,35 +4,32 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Tilemaps;
 
+enum WeaponSelection{ SHARD, SWORD, SHIELD, NONE }
+
 public class Weapons : MonoBehaviour
 {
     private PlayerControls playerControls;
     private Vector2 direction;
-    public GameObject bullet;
-    public Transform weaponPosition;
-    public GameObject shield;
-    public GameObject sword;
-    private bool isFacingRight;
-    private bool wasFacingRight;
+    private bool isFacingRight, wasFacingRight;
     private int maxBlocks;
-    private string action = "";
-    [SerializeField] private LayerMask enemyLayer;
-    [SerializeField] private LayerMask groundLayer;
-    public Tile bridge;
-    public Tilemap floor;
-    public Tilemap bridgeFloor;
-    public float attackRange;
-    public GameObject txt;
-    public int option;
+    private WeaponSelection action = WeaponSelection.NONE;
     private float timer;
-    public bool didBridge;
-    public bool hit = true;
-    public bool currBullet;
-    public bool currShield;
     private Vector3Int currentCell;
     private GameObject bulletInstance;
+    [SerializeField] private LayerMask enemyLayer, groundLayer;
 
-    //Sets up player controls with input system
+    public GameObject bullet, shield;
+    public Transform weaponPosition;
+    public float attackRange;
+    public bool currBullet, currShield;
+    public bool hit = true;
+    public Tile bridge;
+    public Tilemap floor, bridgeFloor;
+    public GameObject txt;
+    public int option;
+
+    
+    #region InputSystem //Sets up player controls with input system
     private void Awake(){
         playerControls = new PlayerControls();
     }
@@ -42,120 +39,96 @@ public class Weapons : MonoBehaviour
     private void OnDisable(){
         playerControls.Disable();
     }
+    #endregion
 
     // Update is called once per frame
     void Update()
     {
-        //Checks to see if player is facing right
-        isFacingRight = GetComponent<Movement>().isFacingRight;
-        //Get direction of right joystick/keyboard input to choose what is selected
-        direction = playerControls.Player.Choice.ReadValue<Vector2>();
+        isFacingRight = GetComponent<Movement>().isFacingRight; //Checks to see if player is facing right
+        direction = playerControls.Player.Choice.ReadValue<Vector2>(); //Get direction of right joystick/keyboard input to choose what is selected
 
         float dirX = direction.x;
         float dirY = direction.y;
-        //checkHit(option);
         if (!currBullet && (((dirX > -0.75f && dirX < 0f) && (dirY > -0.56f && dirY < 1f)) || playerControls.Player.Shard.IsPressed()) && option != 1){
-            action = "SHARD";
+            action = WeaponSelection.SHARD;
         } else if ((((dirX > 0f && dirX < 0.75f) && (dirY > -0.56f && dirY < 1f)) || playerControls.Player.Sword.IsPressed()) && option != 2){
-            action = "SWORD";
+            action = WeaponSelection.SWORD;
         } else if (!currShield && (((dirX > -0.75f && dirX < 0.75f) && (dirY > -1f && dirY < -0.56f)) || playerControls.Player.Shield.IsPressed()) && option != 3){
-            action = "SHIELD";
+            action = WeaponSelection.SHIELD;
         }
-        txt.GetComponent<TMPro.TextMeshProUGUI>().text = action;
-        //If the fire button is pressed, do one of the mechanics selected.
-        bool temp = playerControls.Player.Fire.IsPressed();
+        txt.GetComponent<TMPro.TextMeshProUGUI>().text = action.ToString(); //Display weapon selection on screen.
+        bool temp = playerControls.Player.Fire.IsPressed(); //If the fire button is pressed, do one of the mechanics selected.
         if (temp && timer <= 0){
             hit = false;
             switch (action){
-                case "SHARD":
+                case WeaponSelection.SHARD:
                     shootBullet();
                     timer = 0.2f;
                     break;
-                case "SWORD":
+                case WeaponSelection.SWORD:
                     useSword();
                     timer = 0.2f;
                     break;
-                case "SHIELD":
+                case WeaponSelection.SHIELD:
                     useShield();
                     timer = 0.2f;
                     break;
             }
-        }
-        if (playerControls.Player.Scaffold.IsPressed() && !didBridge && timer <= -0.2f){
+        } 
+        if (playerControls.Player.Bridge.IsPressed() && gameObject.GetComponent<Movement>().grounded && timer <= 0) {
             placeBridge();
-            timer = 0.2f;
-        } else if (playerControls.Player.Scaffold.IsPressed() && timer <= -0.2f){
-            clearTools();
             timer = 0.2f;
         }
         timer -= Time.deltaTime;
     }
     void shootBullet(){
-        //DestroyImmediate(bulletInstance);
         currBullet = true;
-        //bulletInstance = null;
         resetShield();
-        resetTiles();
+        clearBridge();
         bulletInstance = Instantiate(bullet, weaponPosition.position, transform.rotation);
-        bulletInstance.GetComponent<Rigidbody2D>().velocity = isFacingRight ? Vector3.right * 20f : Vector3.right * -20f;
-        action = "";
+        action = WeaponSelection.NONE;
     }
 
     void useSword(){
         resetShield();
-        resetTiles();
+        clearBridge();
         Collider2D[] enemyCheck = Physics2D.OverlapCircleAll(weaponPosition.position, attackRange, enemyLayer);
         RaycastHit2D groundCheck = Physics2D.Raycast(transform.position, transform.TransformDirection(Vector2.right), attackRange, groundLayer);
         foreach(Collider2D enemy in enemyCheck){
             if (!groundCheck){
                 enemy.gameObject.SetActive(false);
                 hit = true;
-                didBridge = false;
                 option = 2;
-                action = "";
+                action = WeaponSelection.NONE;
             }
         }
     }
 
     void useShield(){
-        resetTiles();
+        clearBridge();
         currShield = true;
         shield.SetActive(true);
-        action = "";
+        action = WeaponSelection.NONE;
     }
 
     void placeBridge(){
+        clearBridge();
         resetShield();
         currentCell = floor.WorldToCell(transform.position);
+        int factor = isFacingRight ? 1 : -1;
         currentCell.y -= 2;
-        currentCell.x -= 1;
-        if (floor.GetTile(currentCell) == null && gameObject.GetComponent<Movement>().grounded){
-            bridgeFloor.SetTile(currentCell, bridge);
-        }
-        currentCell.x += 1;
-        if (floor.GetTile(currentCell) == null && gameObject.GetComponent<Movement>().grounded){
-            bridgeFloor.SetTile(currentCell, bridge);
-        }
-        for(int i = 0; i < 5; i++){
-            currentCell.x += isFacingRight ? 1 : -1;
-            wasFacingRight = isFacingRight;
-        if (floor.GetTile(currentCell) == null && gameObject.GetComponent<Movement>().grounded){
-            bridgeFloor.SetTile(currentCell, bridge);
-            didBridge = true;
-        } else if (i == 0){
-        }
-        else {
-            maxBlocks = i;
-            break;
-        }
+        for(int i = 0; i < 6; i++){
+            if (floor.GetTile(currentCell) == null){
+                bridgeFloor.SetTile(currentCell, bridge);
+            } else if (i == 0){
+            } else {
+                break;
+            }
+            currentCell.x += factor;
         }
     }
 
-    void clearTools(){
-        resetTiles();
-        didBridge = false;
-    }
-    void resetTiles(){
+    void clearBridge(){
         bridgeFloor.ClearAllTiles();
     }
 

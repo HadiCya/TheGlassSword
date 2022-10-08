@@ -64,7 +64,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""Scaffold"",
+                    ""name"": ""Bridge"",
                     ""type"": ""Button"",
                     ""id"": ""7c328943-ec76-4c82-83b1-8a84cd6f4881"",
                     ""expectedControlType"": ""Button"",
@@ -328,7 +328,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Scaffold"",
+                    ""action"": ""Bridge"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -339,7 +339,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
-                    ""action"": ""Scaffold"",
+                    ""action"": ""Bridge"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -448,7 +448,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         m_Player_Fire = m_Player.FindAction("Fire", throwIfNotFound: true);
         m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
         m_Player_Choice = m_Player.FindAction("Choice", throwIfNotFound: true);
-        m_Player_Scaffold = m_Player.FindAction("Scaffold", throwIfNotFound: true);
+        m_Player_Bridge = m_Player.FindAction("Bridge", throwIfNotFound: true);
         m_Player_Shard = m_Player.FindAction("Shard", throwIfNotFound: true);
         m_Player_Sword = m_Player.FindAction("Sword", throwIfNotFound: true);
         m_Player_Shield = m_Player.FindAction("Shield", throwIfNotFound: true);
@@ -515,7 +515,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Fire;
     private readonly InputAction m_Player_Jump;
     private readonly InputAction m_Player_Choice;
-    private readonly InputAction m_Player_Scaffold;
+    private readonly InputAction m_Player_Bridge;
     private readonly InputAction m_Player_Shard;
     private readonly InputAction m_Player_Sword;
     private readonly InputAction m_Player_Shield;
@@ -527,7 +527,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         public InputAction @Fire => m_Wrapper.m_Player_Fire;
         public InputAction @Jump => m_Wrapper.m_Player_Jump;
         public InputAction @Choice => m_Wrapper.m_Player_Choice;
-        public InputAction @Scaffold => m_Wrapper.m_Player_Scaffold;
+        public InputAction @Bridge => m_Wrapper.m_Player_Bridge;
         public InputAction @Shard => m_Wrapper.m_Player_Shard;
         public InputAction @Sword => m_Wrapper.m_Player_Sword;
         public InputAction @Shield => m_Wrapper.m_Player_Shield;
@@ -552,9 +552,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @Choice.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnChoice;
                 @Choice.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnChoice;
                 @Choice.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnChoice;
-                @Scaffold.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnScaffold;
-                @Scaffold.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnScaffold;
-                @Scaffold.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnScaffold;
+                @Bridge.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnBridge;
+                @Bridge.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnBridge;
+                @Bridge.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnBridge;
                 @Shard.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnShard;
                 @Shard.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnShard;
                 @Shard.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnShard;
@@ -580,9 +580,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @Choice.started += instance.OnChoice;
                 @Choice.performed += instance.OnChoice;
                 @Choice.canceled += instance.OnChoice;
-                @Scaffold.started += instance.OnScaffold;
-                @Scaffold.performed += instance.OnScaffold;
-                @Scaffold.canceled += instance.OnScaffold;
+                @Bridge.started += instance.OnBridge;
+                @Bridge.performed += instance.OnBridge;
+                @Bridge.canceled += instance.OnBridge;
                 @Shard.started += instance.OnShard;
                 @Shard.performed += instance.OnShard;
                 @Shard.canceled += instance.OnShard;
@@ -647,7 +647,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         void OnFire(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
         void OnChoice(InputAction.CallbackContext context);
-        void OnScaffold(InputAction.CallbackContext context);
+        void OnBridge(InputAction.CallbackContext context);
         void OnShard(InputAction.CallbackContext context);
         void OnSword(InputAction.CallbackContext context);
         void OnShield(InputAction.CallbackContext context);

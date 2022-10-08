@@ -42,7 +42,7 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "Scaffold",
+                    "name": "Bridge",
                     "type": "Button",
                     "id": "7c328943-ec76-4c82-83b1-8a84cd6f4881",
                     "expectedControlType": "Button",
@@ -306,7 +306,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Scaffold",
+                    "action": "Bridge",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -317,7 +317,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
-                    "action": "Scaffold",
+                    "action": "Bridge",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
