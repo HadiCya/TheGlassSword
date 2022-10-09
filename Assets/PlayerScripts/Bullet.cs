@@ -28,7 +28,6 @@ public class Bullet : MonoBehaviour
             player.GetComponent<Weapons>().option = 1;
             col.gameObject.SetActive(false);
         }
-        gameObject.GetComponent<BoxCollider2D>().enabled = false;
         gameObject.SetActive(false);
     }
 

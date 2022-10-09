@@ -10,8 +10,7 @@ public class Weapons : MonoBehaviour
 {
     private PlayerControls playerControls;
     private Vector2 direction;
-    private bool isFacingRight, wasFacingRight;
-    private int maxBlocks;
+    private bool isFacingRight;
     private WeaponSelection action = WeaponSelection.NONE;
     private float timer;
     private Vector3Int currentCell;
@@ -21,7 +20,7 @@ public class Weapons : MonoBehaviour
     public GameObject bullet, shield;
     public Transform weaponPosition;
     public float attackRange;
-    public bool currBullet, currShield;
+    public bool currBullet;
     public bool hit = true;
     public Tile bridge;
     public Tilemap floor, bridgeFloor;
@@ -40,20 +39,18 @@ public class Weapons : MonoBehaviour
         playerControls.Disable();
     }
     #endregion
-
-    // Update is called once per frame
-    void Update()
+    void Update() //Selection and trigger for weapon select
     {
         isFacingRight = GetComponent<Movement>().isFacingRight; //Checks to see if player is facing right
         direction = playerControls.Player.Choice.ReadValue<Vector2>(); //Get direction of right joystick/keyboard input to choose what is selected
 
         float dirX = direction.x;
         float dirY = direction.y;
-        if (!currBullet && (((dirX > -0.75f && dirX < 0f) && (dirY > -0.56f && dirY < 1f)) || playerControls.Player.Shard.IsPressed()) && option != 1){
+        if (!currBullet && (((dirX > -0.75f && dirX < 0f) && (dirY > -0.56f && dirY < 1f)) || playerControls.Player.Shard.IsPressed())){ //&& option != 1
             action = WeaponSelection.SHARD;
         } else if ((((dirX > 0f && dirX < 0.75f) && (dirY > -0.56f && dirY < 1f)) || playerControls.Player.Sword.IsPressed()) && option != 2){
             action = WeaponSelection.SWORD;
-        } else if (!currShield && (((dirX > -0.75f && dirX < 0.75f) && (dirY > -1f && dirY < -0.56f)) || playerControls.Player.Shield.IsPressed()) && option != 3){
+        } else if (!shield.activeSelf && (((dirX > -0.75f && dirX < 0.75f) && (dirY > -1f && dirY < -0.56f)) || playerControls.Player.Shield.IsPressed()) && option != 3){
             action = WeaponSelection.SHIELD;
         }
         txt.GetComponent<TMPro.TextMeshProUGUI>().text = action.ToString(); //Display weapon selection on screen.
@@ -81,15 +78,14 @@ public class Weapons : MonoBehaviour
         }
         timer -= Time.deltaTime;
     }
-    void shootBullet(){
+    void shootBullet(){ //Activates shard state
         currBullet = true;
         resetShield();
         clearBridge();
         bulletInstance = Instantiate(bullet, weaponPosition.position, transform.rotation);
         action = WeaponSelection.NONE;
     }
-
-    void useSword(){
+    void useSword(){ //Activates sword state
         resetShield();
         clearBridge();
         Collider2D[] enemyCheck = Physics2D.OverlapCircleAll(weaponPosition.position, attackRange, enemyLayer);
@@ -103,15 +99,12 @@ public class Weapons : MonoBehaviour
             }
         }
     }
-
-    void useShield(){
+    void useShield(){ //Activates shield state
         clearBridge();
-        currShield = true;
         shield.SetActive(true);
         action = WeaponSelection.NONE;
     }
-
-    void placeBridge(){
+    void placeBridge(){ //Activates bridge state
         clearBridge();
         resetShield();
         currentCell = floor.WorldToCell(transform.position);
@@ -127,16 +120,12 @@ public class Weapons : MonoBehaviour
             currentCell.x += factor;
         }
     }
-
-    void clearBridge(){
+    void clearBridge(){ //Clears bridge state
         bridgeFloor.ClearAllTiles();
     }
-
-    void resetShield(){
-        currShield = false;
+    void resetShield(){ //Clears shield state
         shield.SetActive(false);
     }
-
     private void OnDrawGizmos() {
      Gizmos.color = Color.red;
      Gizmos.DrawWireSphere(weaponPosition.position, attackRange);

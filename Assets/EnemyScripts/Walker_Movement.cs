@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Walker_Movement : Walker_AI
 {
-    private Rigidbody2D rb2d;
+    public Rigidbody2D rb2d;
     public int _moveSpeed;
     public int _dz;
 
