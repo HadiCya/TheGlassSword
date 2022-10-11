@@ -98,6 +98,15 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Debug Trigger"",
+                    ""type"": ""Button"",
+                    ""id"": ""27d5c738-cca7-43ee-84b3-723f21feeab1"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -327,7 +336,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""path"": ""<Keyboard>/4"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""Bridge"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -360,7 +369,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""path"": ""<Keyboard>/3"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""Shield"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -371,8 +380,19 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""path"": ""<Keyboard>/1"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""Shard"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""291a9ba0-172b-44da-91b3-bb2f29582a63"",
+                    ""path"": ""<Keyboard>/f"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse;Gamepad;Touch;Joystick;XR"",
+                    ""action"": ""Debug Trigger"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -452,6 +472,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         m_Player_Shard = m_Player.FindAction("Shard", throwIfNotFound: true);
         m_Player_Sword = m_Player.FindAction("Sword", throwIfNotFound: true);
         m_Player_Shield = m_Player.FindAction("Shield", throwIfNotFound: true);
+        m_Player_DebugTrigger = m_Player.FindAction("Debug Trigger", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -519,6 +540,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Shard;
     private readonly InputAction m_Player_Sword;
     private readonly InputAction m_Player_Shield;
+    private readonly InputAction m_Player_DebugTrigger;
     public struct PlayerActions
     {
         private @PlayerControls m_Wrapper;
@@ -531,6 +553,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         public InputAction @Shard => m_Wrapper.m_Player_Shard;
         public InputAction @Sword => m_Wrapper.m_Player_Sword;
         public InputAction @Shield => m_Wrapper.m_Player_Shield;
+        public InputAction @DebugTrigger => m_Wrapper.m_Player_DebugTrigger;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -564,6 +587,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @Shield.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnShield;
                 @Shield.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnShield;
                 @Shield.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnShield;
+                @DebugTrigger.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDebugTrigger;
+                @DebugTrigger.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDebugTrigger;
+                @DebugTrigger.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDebugTrigger;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -592,6 +618,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @Shield.started += instance.OnShield;
                 @Shield.performed += instance.OnShield;
                 @Shield.canceled += instance.OnShield;
+                @DebugTrigger.started += instance.OnDebugTrigger;
+                @DebugTrigger.performed += instance.OnDebugTrigger;
+                @DebugTrigger.canceled += instance.OnDebugTrigger;
             }
         }
     }
@@ -651,5 +680,6 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         void OnShard(InputAction.CallbackContext context);
         void OnSword(InputAction.CallbackContext context);
         void OnShield(InputAction.CallbackContext context);
+        void OnDebugTrigger(InputAction.CallbackContext context);
     }
 }

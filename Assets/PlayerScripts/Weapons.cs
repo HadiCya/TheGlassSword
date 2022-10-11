@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Tilemaps;
 
-enum WeaponSelection{ SHARD, SWORD, SHIELD, NONE }
+enum WeaponSelection{ SHARD, SWORD, SHIELD, BRIDGE, NONE }
 
 public class Weapons : MonoBehaviour
 {
@@ -15,6 +15,7 @@ public class Weapons : MonoBehaviour
     private float timer;
     private Vector3Int currentCell;
     private GameObject bulletInstance;
+    private GameObject placedBridge;
     [SerializeField] private LayerMask enemyLayer, groundLayer;
 
     public GameObject bullet, shield;
@@ -25,9 +26,11 @@ public class Weapons : MonoBehaviour
     public Tile bridge;
     public Tilemap floor, bridgeFloor;
     public GameObject txt;
+    public GameObject BridgeChecker;
     public int option;
+    public GameObject glassBridge;
 
-    
+
     #region InputSystem //Sets up player controls with input system
     private void Awake(){
         playerControls = new PlayerControls();
@@ -41,18 +44,38 @@ public class Weapons : MonoBehaviour
     #endregion
     void Update() //Selection and trigger for weapon select
     {
+       
         isFacingRight = GetComponent<Movement>().isFacingRight; //Checks to see if player is facing right
         direction = playerControls.Player.Choice.ReadValue<Vector2>(); //Get direction of right joystick/keyboard input to choose what is selected
 
         float dirX = direction.x;
         float dirY = direction.y;
-        if (!currBullet && (((dirX > -0.75f && dirX < 0f) && (dirY > -0.56f && dirY < 1f)) || playerControls.Player.Shard.IsPressed())){ //&& option != 1
+        if (!currBullet && (((dirX > -0.75f && dirX < 0f) && (dirY > -0.56f && dirY < 1f)) || playerControls.Player.Shard.IsPressed()))
+        { //&& option != 1
             action = WeaponSelection.SHARD;
-        } else if ((((dirX > 0f && dirX < 0.75f) && (dirY > -0.56f && dirY < 1f)) || playerControls.Player.Sword.IsPressed()) && option != 2){
+        } 
+        else if ((((dirX > 0f && dirX < 0.75f) && (dirY > -0.56f && dirY < 1f)) || playerControls.Player.Sword.IsPressed()) && option != 2)
+        {
             action = WeaponSelection.SWORD;
-        } else if (!shield.activeSelf && (((dirX > -0.75f && dirX < 0.75f) && (dirY > -1f && dirY < -0.56f)) || playerControls.Player.Shield.IsPressed()) && option != 3){
+        } 
+        else if (!shield.activeSelf && (((dirX > -0.75f && dirX < 0.75f) && (dirY > -1f && dirY < -0.56f)) || playerControls.Player.Shield.IsPressed()) && option != 3)
+        {
             action = WeaponSelection.SHIELD;
+        } 
+        else if (playerControls.Player.Bridge.IsPressed())
+        {
+            action = WeaponSelection.BRIDGE;
         }
+
+        // See if bridge placement box should appear
+        if (action == WeaponSelection.BRIDGE)
+        {
+            BridgeChecker.SetActive(true);
+        } else
+        {
+            BridgeChecker.SetActive(false);
+        }
+
         txt.GetComponent<TMPro.TextMeshProUGUI>().text = action.ToString(); //Display weapon selection on screen.
         bool temp = playerControls.Player.Fire.IsPressed(); //If the fire button is pressed, do one of the mechanics selected.
         if (temp && timer <= 0){
@@ -70,13 +93,19 @@ public class Weapons : MonoBehaviour
                     useShield();
                     timer = 0.2f;
                     break;
+                case WeaponSelection.BRIDGE:
+                    Debug.Log("Placing Bridge!");
+                    placeBridge();
+                    timer = 0.2f;
+                    break;
             }
         } 
-        if (playerControls.Player.Bridge.IsPressed() && gameObject.GetComponent<Movement>().grounded && timer <= 0) {
-            placeBridge();
-            timer = 0.2f;
-        }
+        //if (playerControls.Player.Bridge.IsPressed() && gameObject.GetComponent<Movement>().grounded && timer <= 0) {
+        //    placeBridge();
+        //    timer = 0.2f;
+        //}
         timer -= Time.deltaTime;
+        
     }
     void shootBullet(){ //Activates shard state
         currBullet = true;
@@ -86,6 +115,7 @@ public class Weapons : MonoBehaviour
         action = WeaponSelection.NONE;
     }
     void useSword(){ //Activates sword state
+        
         resetShield();
         clearBridge();
         Collider2D[] enemyCheck = Physics2D.OverlapCircleAll(weaponPosition.position, attackRange, enemyLayer);
@@ -105,12 +135,20 @@ public class Weapons : MonoBehaviour
         action = WeaponSelection.NONE;
     }
     void placeBridge(){ //Activates bridge state
+        placedBridge = Instantiate(glassBridge, BridgeChecker.transform);
+        placedBridge.SetActive(true);
+        //placedBridge.transform.localScale = new Vector3(7.28f,8.23f,7);
+        Debug.Log("Placed Bridge!");
+        action = WeaponSelection.NONE;
+        /**
         clearBridge();
         resetShield();
         currentCell = floor.WorldToCell(transform.position);
         int factor = isFacingRight ? 1 : -1;
         currentCell.y -= 2;
-        for(int i = 0; i < 6; i++){
+        
+
+        for (int i = 0; i < 6; i++){
             if (floor.GetTile(currentCell) == null){
                 bridgeFloor.SetTile(currentCell, bridge);
             } else if (i == 0){
@@ -119,6 +157,7 @@ public class Weapons : MonoBehaviour
             }
             currentCell.x += factor;
         }
+        **/
     }
     void clearBridge(){ //Clears bridge state
         bridgeFloor.ClearAllTiles();

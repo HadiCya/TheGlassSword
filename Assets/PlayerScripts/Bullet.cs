@@ -22,13 +22,16 @@ public class Bullet : MonoBehaviour
         }
         timer -= Time.deltaTime;
     }
-    void OnTriggerEnter2D(Collider2D col){
+    void OnTriggerEnter2D(Collider2D col)
+    {
         endBullet();
-        if (col.gameObject.layer == LayerMask.NameToLayer("Enemy")){
+        if (col.gameObject.layer == LayerMask.NameToLayer("Enemy"))
+        {
             player.GetComponent<Weapons>().option = 1;
             col.gameObject.SetActive(false);
         }
         gameObject.SetActive(false);
+        
     }
 
     void endBullet(){
