@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
 
 public class Movement : MonoBehaviour
@@ -12,6 +13,7 @@ public class Movement : MonoBehaviour
     private float timer;
     public bool grounded;
     public bool isFacingRight = true;
+    public GameObject winLose;
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private Transform groundCheck;
     [SerializeField] private LayerMask groundLayer;
@@ -27,6 +29,7 @@ public class Movement : MonoBehaviour
     }
 
     private void OnDisable(){
+        winLose.GetComponent<TMPro.TextMeshProUGUI>().text = "YOU LOSE";
         playerControls.Disable();
         playerControls.Player.Jump.performed -= DoJump;
     }
