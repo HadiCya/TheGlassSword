@@ -46,6 +46,10 @@ public class Movement : MonoBehaviour
     }
 
     private void Update(){
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Application.Quit();
+        }
         moveDirection = playerControls.Player.Move.ReadValue<Vector2>();
         if(isGrounded()){
             grounded = true;
